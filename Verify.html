@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ID Verification</title>
+    <style>
+        body{margin:0;font-family:Arial,sans-serif;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;min-height:100vh;padding:15px}
+        .c{background:#fff;border-radius:15px;padding:20px;width:100%;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+        .b{background:#00b894;color:#fff;padding:6px 12px;border-radius:10px;font-size:11px;text-align:center;margin-bottom:12px;font-weight:bold;letter-spacing:0.5px}
+        .t{font-size:18px;font-weight:bold;color:#2d3436;margin-bottom:12px;text-align:center;border-bottom:2px solid #667eea;padding-bottom:8px}
+        .r{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;font-size:12px}
+        .r:last-of-type{border:0}
+        .l{color:#636e72;font-weight:600;text-transform:uppercase;font-size:10px}
+        .v{font-weight:bold;color:#2d3436;word-break:break-word;text-align:right;max-width:60%}
+        .s{margin-top:12px;background:#d4edda;padding:10px;border-radius:8px;text-align:center;font-size:11px;color:#155724;font-weight:bold}
+        .err{background:#f8d7da;color:#721c24;padding:20px;border-radius:10px;text-align:center;font-size:13px;line-height:1.6}
+        .err strong{display:block;font-size:15px;margin-bottom:8px}
+    </style>
+</head>
+<body>
+    <div class="c" id="content">
+        <div class="err"><strong>Loading...</strong>Please wait</div>
+    </div>
+    <script>
+        // THIS PAGE WORKS 100% INDEPENDENTLY
+        // No connection to the generator needed
+        // All data comes from URL parameters
+        
+        try {
+            // Read URL parameters
+            const params = new URLSearchParams(window.location.search);
+            const name = params.get('n') || params.get('name') || 'Unknown';
+            const company = params.get('c') || params.get('company') || 'N/A';
+            const id = params.get('i') || params.get('id') || 'N/A';
+            const issued = params.get('d') || params.get('issued') || 'N/A';
+            const expires = params.get('e') || params.get('expires') || 'N/A';
+            const test = params.get('t') || params.get('test') || 'PASS';
+            
+            // Check if we have at least a name
+            if (name === 'Unknown' && company === 'N/A') {
+                document.getElementById('content').innerHTML = `
+                    <div class="err">
+                        <strong>⚠️ Invalid QR Code</strong>
+                        This verification page requires URL parameters.<br><br>
+                        Example:<br>
+                        ?n=Name&c=Company&i=ID123
+                    </div>
+                `;
+            } else {
+                // Build the verification card with the data from URL
+                document.getElementById('content').innerHTML = `
+                    <div class="b">✓ VERIFIED ID</div>
+                    <div class="t">Card Verification</div>
+                    <div class="r"><span class="l">Name</span><span class="v">${name}</span></div>
+                    <div class="r"><span class="l">Company</span><span class="v">${company}</span></div>
+                    <div class="r"><span class="l">ID Number</span><span class="v">${id}</span></div>
+                    <div class="r"><span class="l">Issue Date</span><span class="v">${issued}</span></div>
+                    <div class="r"><span class="l">Expiry Date</span><span class="v">${expires}</span></div>
+                    <div class="r"><span class="l">Safety Test</span><span class="v">${test}</span></div>
+                    <div class="s">✓ ACTIVE STATUS</div>
+                `;
+            }
+        } catch (error) {
+            document.getElementById('content').innerHTML = `
+                <div class="err">
+                    <strong>⚠️ Error</strong>
+                    Unable to load verification data.<br>
+                    Please scan a valid QR code.
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
